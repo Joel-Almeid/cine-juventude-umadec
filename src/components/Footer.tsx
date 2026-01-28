@@ -8,7 +8,7 @@ export function Footer() {
     <footer className="py-6 border-t border-border/50 mt-auto">
       <div className="container flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          © 2026 Cine Juventude - UMADEC & COMADESMA
+          © 2026 Cine Juventude - UMADEC - COMADESMA
         </p>
         <button
           onClick={() => navigate('/admin')}

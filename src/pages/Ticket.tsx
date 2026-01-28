@@ -125,7 +125,7 @@ export default function Ticket() {
               <Film className="w-6 h-6 text-primary" />
               <h1 className="text-2xl font-display neon-text-purple">CINE JUVENTUDE</h1>
             </div>
-            <p className="text-xs text-muted-foreground tracking-widest">UMADEC & COMADESMA</p>
+            <p className="text-xs text-muted-foreground tracking-widest">UMADEC - COMADESMA</p>
           </div>
 
           {/* Movie Poster Placeholder */}

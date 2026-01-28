@@ -58,7 +58,7 @@ export const PRODUCTS: Product[] = [
   {
     id: 'combo_couple',
     name: 'Combo Duplo',
-    description: '2 Ingressos + Pipoca + Refrigerantes',
+    description: '2 Ingressos + Pipoca + Refrigerante',
     price: 18.00,
     icon: '👥',
   },

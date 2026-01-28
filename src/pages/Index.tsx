@@ -141,8 +141,9 @@ const Index = () => {
             <h3 className="font-display text-xl mb-4">📅 INFORMAÇÕES DO EVENTO</h3>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p><strong className="text-foreground">Data:</strong> 14 de Fevereiro de 2026</p>
-              <p><strong className="text-foreground">Horário:</strong> 19:30</p>
-              <p><strong className="text-foreground">Organização:</strong> UMADEC & COMADESMA</p>
+              <p><strong className="text-foreground">Horário:</strong> 19h30</p>
+              <p><strong className="text-foreground">Localização:</strong> ASSEMBLEIA DE DEUS COMADESMA -FORMOSO DO ARAGUAIA - TO </p>
+              <p><strong className="text-foreground">Organização:</strong> UMADEC - COMADESMA</p>
             </div>
           </div>
         </main>
