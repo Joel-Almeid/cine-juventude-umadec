@@ -7,7 +7,7 @@ interface ScarcityBarProps {
 
 export function ScarcityBar({ ticketsSold, ticketsTotal }: ScarcityBarProps) {
   const remaining = ticketsTotal - ticketsSold;
-  const percentage = (ticketsSold / ticketsTotal) * 100;
+  const percentage = (ticketsSold / ticketsTotal) * 60;
 
   return (
     <div className="bg-gradient-primary scarcity-pulse sticky top-0 z-50">
