@@ -10,7 +10,7 @@ export function Header() {
         </h1>
       </div>
       <p className="text-muted-foreground text-sm tracking-widest">
-        UMADEC & COMADESMA
+        UMADEC - COMADESMA
       </p>
     </header>
   );
