@@ -80,7 +80,7 @@ export default function Ticket() {
     switch (type) {
       case 'single': return '🎟️';
       case 'combo_individual': return '🍿';
-      case 'combo_couple': return '💑';
+      case 'combo_couple': return '👥';
       default: return '🎬';
     }
   };
