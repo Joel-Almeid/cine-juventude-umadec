@@ -34,6 +34,17 @@ export function CheckoutModal({ product, sellers, pixKey, onClose, onSuccess }: 
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // ---------------------------------------------------------
+  // LISTA DE VENDEDORES (FIXA)
+  // ---------------------------------------------------------
+  const sellersList = [
+    "Adriana", "Ana Kayla", "Daniel", "Deyfesson",
+    "Eidy", "Eluan", "Enzo Henrique", "Ester",
+    "Guilherme", "Ketlyn", "Lara", "Luana",
+    "Mateus", "Natanael", "Stephany", "Weslany"
+  ];
+  // ---------------------------------------------------------
+
   const formatWhatsApp = (value: string) => {
     const numbers = value.replace(/\D/g, '');
     if (numbers.length <= 2) return numbers;
@@ -183,11 +194,11 @@ export function CheckoutModal({ product, sellers, pixKey, onClose, onSuccess }: 
                   <SelectValue placeholder="Selecione o vendedor" />
                 </SelectTrigger>
                 <SelectContent className="bg-card border-border">
-                  {sellers.map((seller) => (
-                    <SelectItem key={seller.id} value={seller.id}>
-                      {seller.name}
-                    </SelectItem>
-                  ))}
+                  {sellersList.map((name) => (
+  <SelectItem key={name} value={name}>
+    {name}
+  </SelectItem>
+))}
                 </SelectContent>
               </Select>
             </div>
