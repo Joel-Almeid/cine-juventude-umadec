@@ -217,7 +217,7 @@ export function CheckoutModal({ product, sellers, pixKey, onClose, onSuccess }: 
               <div className="qr-container p-3">
                 <QRCodeSVG
                   value={pixPayload}
-                  size={140}
+                  size={120}
                   level="M"
                   includeMargin={false}
                 />
