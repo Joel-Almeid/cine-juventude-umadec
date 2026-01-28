@@ -4,6 +4,9 @@ import { Header } from '@/components/Header';
 import { ScarcityBar } from '@/components/ScarcityBar';
 import { ProductCard } from '@/components/ProductCard';
 import { CheckoutModal } from '@/components/CheckoutModal';
+import { CountdownTimer } from '@/components/CountdownTimer';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { Footer } from '@/components/Footer';
 import { PRODUCTS, Product, Seller } from '@/lib/types';
 import cinemaBg from '@/assets/cinema-bg.jpg';
 import { supabase } from '@/integrations/supabase/client';
@@ -17,10 +20,16 @@ const Index = () => {
   const [ticketsTotal, setTicketsTotal] = useState(100);
   const [pixKey, setPixKey] = useState('cinejuventude@email.com');
   const [loading, setLoading] = useState(true);
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
     fetchData();
     setupRealtimeSubscription();
+
+    // Parallax effect
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const fetchData = async () => {
@@ -80,50 +89,65 @@ const Index = () => {
   }
 
   return (
-    <div 
-      className="min-h-screen bg-background relative"
-      style={{
-        backgroundImage: `url(${cinemaBg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-      }}
-    >
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-background/85 pointer-events-none" />
+    <div className="min-h-screen bg-background relative flex flex-col">
+      {/* Parallax Background */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundImage: `url(${cinemaBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          transform: `translateY(${scrollY * 0.3}px)`,
+        }}
+      />
       
-      <div className="relative z-10">
+      {/* Dark overlay */}
+      <div className="fixed inset-0 bg-background/85 pointer-events-none z-0" />
+      
+      <div className="relative z-10 flex flex-col min-h-screen">
         <ScarcityBar ticketsSold={ticketsSold} ticketsTotal={ticketsTotal} />
         
         <Header />
 
+        {/* Countdown Section */}
+        <section className="container py-6">
+          <CountdownTimer />
+        </section>
+
         {/* Products Section */}
-        <main className="container pb-12">
+        <main className="container pb-12 flex-1">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-display mb-2 neon-text-cyan">GARANTA SEU INGRESSO</h2>
-            <p className="text-muted-foreground">Escolha a opção ideal para você</p>
+            <h2 className="text-3xl font-display mb-2 neon-text-cyan animate-fade-in">GARANTA SEU INGRESSO</h2>
+            <p className="text-muted-foreground animate-fade-in">Escolha a opção ideal para você</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {PRODUCTS.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onSelect={setSelectedProduct}
-              />
+            {PRODUCTS.map((product, index) => (
+              <div 
+                key={product.id} 
+                className="animate-fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <ProductCard
+                  product={product}
+                  onSelect={setSelectedProduct}
+                />
+              </div>
             ))}
           </div>
 
           {/* Event Info */}
-          <div className="mt-12 text-center glass-card max-w-md mx-auto p-6">
+          <div className="mt-12 text-center glass-card max-w-md mx-auto p-6 animate-fade-in">
             <h3 className="font-display text-xl mb-4">📅 INFORMAÇÕES DO EVENTO</h3>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p><strong className="text-foreground">Data:</strong> Em breve</p>
-              <p><strong className="text-foreground">Local:</strong> A definir</p>
+              <p><strong className="text-foreground">Data:</strong> 14 de Fevereiro de 2026</p>
+              <p><strong className="text-foreground">Horário:</strong> 19:30</p>
               <p><strong className="text-foreground">Organização:</strong> UMADEC & COMADESMA</p>
             </div>
           </div>
         </main>
+
+        <Footer />
 
         <CheckoutModal
           product={selectedProduct}
@@ -133,6 +157,8 @@ const Index = () => {
           onSuccess={handlePurchaseSuccess}
         />
       </div>
+
+      <WhatsAppButton />
     </div>
   );
 };

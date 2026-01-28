@@ -1,4 +1,4 @@
-import { Check, Sparkles } from 'lucide-react';
+import { Check, Sparkles, Ticket } from 'lucide-react';
 import { Product } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 
@@ -9,7 +9,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product, onSelect }: ProductCardProps) {
   return (
-    <div className={`product-card relative ${product.popular ? 'border-gradient' : ''}`}>
+    <div className={`product-card relative animate-fade-in ${product.popular ? 'border-gradient' : ''}`}>
       {product.popular && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-primary px-4 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
           <Sparkles className="w-3 h-3" />
@@ -43,6 +43,10 @@ export function ProductCard({ product, onSelect }: ProductCardProps) {
             Pipoca + Refri incluso
           </li>
         )}
+        <li className="flex items-center gap-2">
+          <Ticket className="w-4 h-4 text-success" />
+          Retirada do Ingresso Físico inclusa
+        </li>
       </ul>
       
       <Button 
