@@ -1,13 +1,14 @@
 import { useState, useRef } from 'react';
-import { X, Upload, Copy, Check, Loader2, QrCode } from 'lucide-react';
+import { X, Upload, Copy, Check, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Product, Seller } from '@/lib/types';
+import { Product, Seller, ProductType } from '@/lib/types';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface CheckoutModalProps {
   product: Product | null;
@@ -16,6 +17,13 @@ interface CheckoutModalProps {
   onClose: () => void;
   onSuccess: (orderId: string) => void;
 }
+
+// PIX Payloads por produto
+const PIX_PAYLOADS: Record<ProductType, string> = {
+  single: '00020126650014br.gov.bcb.pix0114+55639922184950225R$ 5,00 - INGRESSO AVULSO52040000530398654045.005802BR5924Joel Abreu Martins de Al6009Sao Paulo62240520daqr31590903150343376304518E',
+  combo_individual: '00020126570014br.gov.bcb.pix0114+55639922184950217COMBO INDIVIDUAL 520400005303986540510.005802BR5924Joel Abreu Martins de Al6009Sao Paulo62240520daqr315909031511858363042AD9',
+  combo_couple: '00020126510014br.gov.bcb.pix0114+55639922184950211COMBO DUPLO520400005303986540518.005802BR5924Joel Abreu Martins de Al6009Sao Paulo62240520daqr31590903152062816304A14A',
+};
 
 export function CheckoutModal({ product, sellers, pixKey, onClose, onSuccess }: CheckoutModalProps) {
   const [name, setName] = useState('');
@@ -37,10 +45,16 @@ export function CheckoutModal({ product, sellers, pixKey, onClose, onSuccess }: 
     setWhatsapp(formatWhatsApp(e.target.value));
   };
 
-  const copyPixKey = async () => {
-    await navigator.clipboard.writeText(pixKey);
+  const getPixPayload = () => {
+    if (!product) return '';
+    return PIX_PAYLOADS[product.id];
+  };
+
+  const copyPixCode = async () => {
+    const payload = getPixPayload();
+    await navigator.clipboard.writeText(payload);
     setCopied(true);
-    toast.success('Chave PIX copiada!');
+    toast.success('Código PIX copiado!');
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -123,6 +137,8 @@ export function CheckoutModal({ product, sellers, pixKey, onClose, onSuccess }: 
 
   if (!product) return null;
 
+  const pixPayload = getPixPayload();
+
   return (
     <Dialog open={!!product} onOpenChange={() => onClose()}>
       <DialogContent className="glass-card border-primary/20 max-w-md max-h-[90vh] overflow-y-auto">
@@ -187,24 +203,29 @@ export function CheckoutModal({ product, sellers, pixKey, onClose, onSuccess }: 
             </div>
 
             <div className="flex justify-center">
-              <div className="qr-container">
-                <QrCode className="w-32 h-32 text-background" />
+              <div className="qr-container p-3">
+                <QRCodeSVG
+                  value={pixPayload}
+                  size={140}
+                  level="M"
+                  includeMargin={false}
+                />
               </div>
             </div>
 
             <div>
-              <Label className="text-xs text-muted-foreground">Chave PIX (E-mail)</Label>
+              <Label className="text-xs text-muted-foreground">Código PIX Copia e Cola</Label>
               <div className="flex gap-2">
                 <Input
-                  value={pixKey}
+                  value={pixPayload.substring(0, 40) + '...'}
                   readOnly
-                  className="bg-muted border-border text-sm"
+                  className="bg-muted border-border text-sm font-mono"
                 />
                 <Button
                   type="button"
                   variant="outline"
                   size="icon"
-                  onClick={copyPixKey}
+                  onClick={copyPixCode}
                   className="shrink-0"
                 >
                   {copied ? <Check className="w-4 h-4 text-success" /> : <Copy className="w-4 h-4" />}

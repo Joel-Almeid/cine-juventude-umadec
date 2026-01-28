@@ -57,7 +57,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'combo_couple',
-    name: 'Combo Casal',
+    name: 'Combo Duplo',
     description: '2 Ingressos + Pipoca G + 2 Refrigerantes',
     price: 18.00,
     icon: '💑',

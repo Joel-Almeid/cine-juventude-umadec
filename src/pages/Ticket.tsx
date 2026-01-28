@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import { toPng } from 'html-to-image';
-import { Download, MessageCircle, Film, Loader2 } from 'lucide-react';
+import { Download, RefreshCw, Film, Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { Order, ProductType } from '@/lib/types';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
 import confetti from 'canvas-confetti';
 
 export default function Ticket() {
@@ -71,6 +72,10 @@ export default function Ticket() {
     }
   };
 
+  const handleBuyAnother = () => {
+    navigate('/');
+  };
+
   const getProductEmoji = (type: ProductType) => {
     switch (type) {
       case 'single': return '🎟️';
@@ -115,7 +120,7 @@ export default function Ticket() {
         {/* Content */}
         <div className="p-6 flex flex-col h-full" style={{ height: 'calc(100% - 48px)' }}>
           {/* Header */}
-          <div className="text-center mb-6">
+          <div className="text-center mb-4">
             <div className="flex items-center justify-center gap-2 mb-1">
               <Film className="w-6 h-6 text-primary" />
               <h1 className="text-2xl font-display neon-text-purple">CINE JUVENTUDE</h1>
@@ -124,7 +129,7 @@ export default function Ticket() {
           </div>
 
           {/* Movie Poster Placeholder */}
-          <div className="relative mb-6 rounded-lg overflow-hidden bg-gradient-to-br from-primary/20 to-accent/20 aspect-video flex items-center justify-center">
+          <div className="relative mb-4 rounded-lg overflow-hidden bg-gradient-to-br from-primary/20 to-accent/20 aspect-video flex items-center justify-center">
             <div className="text-6xl">{getProductEmoji(order.product_type)}</div>
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background to-transparent p-3">
               <p className="font-display text-lg">{order.product_name}</p>
@@ -132,7 +137,7 @@ export default function Ticket() {
           </div>
 
           {/* Customer Info */}
-          <div className="glass-card p-4 mb-4 space-y-2">
+          <div className="glass-card p-4 mb-3 space-y-2">
             <div className="flex justify-between">
               <span className="text-xs text-muted-foreground">PARTICIPANTE</span>
               <span className="text-sm font-semibold">{order.customer_name}</span>
@@ -149,12 +154,22 @@ export default function Ticket() {
             </div>
           </div>
 
+          {/* Physical Ticket Alert */}
+          <div className="glass-card p-3 mb-3 bg-accent/10 border border-accent/30">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+              <p className="text-xs text-accent">
+                <strong>IMPORTANTE:</strong> Apresente este QR Code na recepção para retirar seu INGRESSO FÍSICO.
+              </p>
+            </div>
+          </div>
+
           {/* QR Code */}
           <div className="flex-1 flex flex-col items-center justify-center">
             <div className="qr-container p-3 mb-2">
               <QRCodeSVG
                 value={`CINE-JUVENTUDE:${order.order_code}`}
-                size={150}
+                size={130}
                 level="H"
                 includeMargin={false}
               />
@@ -184,13 +199,15 @@ export default function Ticket() {
 
         <Button
           variant="outline"
-          onClick={() => window.open('https://chat.whatsapp.com/EXEMPLO', '_blank')}
+          onClick={handleBuyAnother}
           className="w-full py-6 text-lg font-semibold border-secondary text-secondary hover:bg-secondary/10"
         >
-          <MessageCircle className="w-5 h-5 mr-2" />
-          Entrar no Grupo VIP
+          <RefreshCw className="w-5 h-5 mr-2" />
+          Comprar Novo Ingresso
         </Button>
       </div>
+
+      <WhatsAppButton />
     </div>
   );
 }
