@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { X, Upload, Copy, Check, Loader2 } from 'lucide-react';
+import { X, Upload, Copy, Check, Loader2, ChevronDown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -217,7 +217,7 @@ export function CheckoutModal({ product, sellers, pixKey, onClose, onSuccess }: 
               <div className="qr-container p-3">
                 <QRCodeSVG
                   value={pixPayload}
-                  size={80}
+                  size={110}
                   level="M"
                   includeMargin={false}
                 />
@@ -232,7 +232,7 @@ export function CheckoutModal({ product, sellers, pixKey, onClose, onSuccess }: 
                   readOnly
                   className="bg-muted border-border text-sm font-mono"
                 />
-                <Button
+              <Button
                   type="button"
                   variant="outline"
                   size="icon"
@@ -242,8 +242,17 @@ export function CheckoutModal({ product, sellers, pixKey, onClose, onSuccess }: 
                   {copied ? <Check className="w-4 h-4 text-success" /> : <Copy className="w-4 h-4" />}
                 </Button>
               </div>
+              
+              {/* Scroll cue for mobile users */}
+              {!receiptFile && (
+                <div className="mt-4 flex flex-col items-center animate-bounce">
+                  <span className="text-amber-400 font-bold text-sm">
+                    👇 Não esqueça de anexar o comprovante
+                  </span>
+                  <ChevronDown className="w-5 h-5 text-amber-400" />
+                </div>
+              )}
             </div>
-          </div>
 
           {/* Receipt Upload */}
           <div>

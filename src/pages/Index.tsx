@@ -105,7 +105,7 @@ const Index = () => {
       <div className="fixed inset-0 bg-background/85 pointer-events-none z-0" />
       
       <div className="relative z-10 flex flex-col min-h-screen">
-        <ScarcityBar ticketsSold={ticketsSold} ticketsTotal={ticketsTotal} />
+        <ScarcityBar ticketsSold={ticketsSold} />
         
         <Header />
 
