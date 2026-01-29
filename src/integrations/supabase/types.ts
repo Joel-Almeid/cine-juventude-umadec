@@ -57,15 +57,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["order_status"] | null
           used_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "orders_seller_id_fkey"
-            columns: ["seller_id"]
-            isOneToOne: false
-            referencedRelation: "sellers"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       sellers: {
         Row: {
