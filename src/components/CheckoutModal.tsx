@@ -253,6 +253,7 @@ export function CheckoutModal({ product, sellers, pixKey, onClose, onSuccess }: 
                 </div>
               )}
             </div>
+          </div>
 
           {/* Receipt Upload */}
           <div>
