@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Download, RefreshCw, Loader2, MessageCircle } from 'lucide-react';
+import { toPng } from 'html-to-image';
+import { Download, RefreshCw, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { Order } from '@/lib/types';
@@ -11,11 +12,10 @@ import ticketTemplate from '@/assets/ticket-template.png';
 export default function Ticket() {
   const { orderId } = useParams();
   const navigate = useNavigate();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const ticketRef = useRef<HTMLDivElement>(null);
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
-  const [canvasReady, setCanvasReady] = useState(false);
 
   useEffect(() => {
     fetchOrder();
@@ -31,48 +31,6 @@ export default function Ticket() {
       });
     }
   }, [order]);
-
-  const renderTicket = useCallback(() => {
-    if (!canvasRef.current || !order) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = async () => {
-      // Ensure Caveat font is loaded before drawing
-      try {
-        await document.fonts.load('bold 32px "Caveat"');
-      } catch (e) {
-        // fallback if font API not available
-      }
-
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-      ctx.drawImage(img, 0, 0);
-
-      // Draw the customer name on the "Nome: ___" line
-      const nameX = img.naturalWidth * 0.24;
-      const nameY = img.naturalHeight * 0.085;
-      const fontSize = Math.max(28, img.naturalWidth * 0.04);
-
-      ctx.font = `bold italic ${fontSize}px "Caveat", Georgia, serif`;
-      ctx.fillStyle = '#1a1a6e';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(order.customer_name, nameX, nameY);
-
-      setCanvasReady(true);
-    };
-    img.src = ticketTemplate;
-  }, [order]);
-
-  useEffect(() => {
-    if (order) {
-      renderTicket();
-    }
-  }, [order, renderTicket]);
 
   const fetchOrder = async () => {
     if (!orderId) return;
@@ -93,11 +51,15 @@ export default function Ticket() {
   };
 
   const downloadTicket = async () => {
-    if (!canvasRef.current) return;
-
+    if (!ticketRef.current) return;
+    
     setDownloading(true);
     try {
-      const dataUrl = canvasRef.current.toDataURL('image/png', 1);
+      const dataUrl = await toPng(ticketRef.current, {
+        quality: 1,
+        pixelRatio: 2,
+      });
+
       const link = document.createElement('a');
       link.download = `ingresso-${order?.order_code}.png`;
       link.href = dataUrl;
@@ -107,13 +69,6 @@ export default function Ticket() {
     } finally {
       setDownloading(false);
     }
-  };
-
-  const sendToWhatsApp = () => {
-    const text = encodeURIComponent(
-      `🎬 Meu ingresso para o Cine Jovem está garantido! Nos vemos dia 21/02! 🍿`
-    );
-    window.open(`https://wa.me/?text=${text}`, '_blank');
   };
 
   if (loading) {
@@ -139,23 +94,42 @@ export default function Ticket() {
 
   return (
     <div className="min-h-screen bg-background p-4 flex flex-col items-center justify-center">
-      {/* Ticket rendered on canvas */}
-      <canvas
-        ref={canvasRef}
-        className="w-full max-w-lg h-auto"
-        style={{ display: canvasReady ? 'block' : 'none' }}
-      />
-      {!canvasReady && (
-        <div className="w-full max-w-lg flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      {/* Custom Ticket with physical template */}
+      <div
+        ref={ticketRef}
+        className="relative w-full max-w-lg animate-scale-in"
+      >
+        <img
+          src={ticketTemplate}
+          alt="Ingresso Cine Jovem"
+          className="w-full h-auto"
+          crossOrigin="anonymous"
+        />
+        {/* Name overlay on the "Nome: ___" line */}
+        <div
+          className="absolute"
+          style={{
+            top: '3.5%',
+            left: '18%',
+            right: '5%',
+            fontSize: 'clamp(14px, 3.2vw, 28px)',
+            fontFamily: '"Bebas Neue", cursive',
+            color: '#3a1a0a',
+            letterSpacing: '1px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {order.customer_name}
         </div>
-      )}
+      </div>
 
       {/* Action Buttons */}
       <div className="w-full max-w-lg mt-6 space-y-3">
         <Button
           onClick={downloadTicket}
-          disabled={downloading || !canvasReady}
+          disabled={downloading}
           className="w-full btn-neon text-primary-foreground py-6 text-lg font-semibold"
         >
           {downloading ? (
@@ -164,15 +138,6 @@ export default function Ticket() {
             <Download className="w-5 h-5 mr-2" />
           )}
           Baixar Ingresso
-        </Button>
-
-        <Button
-          onClick={sendToWhatsApp}
-          className="w-full py-6 text-lg font-semibold text-white hover:opacity-90"
-          style={{ backgroundColor: '#25D366' }}
-        >
-          <MessageCircle className="w-5 h-5 mr-2" fill="white" />
-          Enviar para WhatsApp
         </Button>
 
         <Button
