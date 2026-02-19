@@ -9,8 +9,9 @@ import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { Footer } from '@/components/Footer';
 import { PRODUCTS, Product, Seller } from '@/lib/types';
 import cinemaBg from '@/assets/cinema-bg.jpg';
+import posterImg from '@/assets/poster-cine-jovem.jpg';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2 } from 'lucide-react';
+import { Loader2, MessageCircle } from 'lucide-react';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -25,8 +26,6 @@ const Index = () => {
   useEffect(() => {
     fetchData();
     setupRealtimeSubscription();
-
-    // Parallax effect
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -109,6 +108,16 @@ const Index = () => {
         
         <Header />
 
+        {/* Poster Section */}
+        <section className="container py-6 flex justify-center animate-fade-in">
+          <img 
+            src={posterImg} 
+            alt="Cartaz oficial Cine Jovem - 21/02 às 19h30" 
+            className="w-full max-w-lg rounded-xl shadow-2xl border-2 border-primary/30"
+            loading="lazy"
+          />
+        </section>
+
         {/* Countdown Section */}
         <section className="container py-6">
           <CountdownTimer />
@@ -118,16 +127,12 @@ const Index = () => {
         <main className="container pb-12 flex-1">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-display mb-2 neon-text-cyan animate-fade-in">GARANTA SEU INGRESSO</h2>
-            <p className="text-muted-foreground animate-fade-in">Escolha a opção ideal para você</p>
+            <p className="text-muted-foreground animate-fade-in">Combo Pipoca + Refri por apenas R$ 10,00</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {PRODUCTS.map((product, index) => (
-              <div 
-                key={product.id} 
-                className="animate-fade-in"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
+          <div className="flex justify-center max-w-sm mx-auto">
+            {PRODUCTS.map((product) => (
+              <div key={product.id} className="w-full animate-fade-in">
                 <ProductCard
                   product={product}
                   onSelect={setSelectedProduct}
@@ -136,14 +141,23 @@ const Index = () => {
             ))}
           </div>
 
+          {/* WhatsApp Support CTA */}
+          <div className="mt-8 text-center animate-fade-in">
+            <p className="text-muted-foreground flex items-center justify-center gap-2">
+              <MessageCircle className="w-4 h-4 text-green-400" />
+              Em caso de dúvidas, clique no ícone do WhatsApp para falar conosco.
+            </p>
+          </div>
+
           {/* Event Info */}
           <div className="mt-12 text-center glass-card max-w-md mx-auto p-6 animate-fade-in">
             <h3 className="font-display text-xl mb-4">📅 INFORMAÇÕES DO EVENTO</h3>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p><strong className="text-foreground">Data:</strong> 14 de Fevereiro de 2026</p>
+              <p><strong className="text-foreground">Data:</strong> 21 de Fevereiro de 2026</p>
               <p><strong className="text-foreground">Horário:</strong> 19h30</p>
-              <p><strong className="text-foreground">Localização:</strong> ASSEMBLEIA DE DEUS COMADESMA -FORMOSO DO ARAGUAIA - TO </p>
-              <p><strong className="text-foreground">Organização:</strong> UMADEC - COMADESMA</p>
+              <p><strong className="text-foreground">Local:</strong> IEAD COMADESMA - Formoso do Araguaia - TO</p>
+              <p><strong className="text-foreground">Endereço:</strong> Rua José Bonifácio, esq. com a Av. Joaquim Batista</p>
+              <p><strong className="text-foreground">Organização:</strong> UMADECFA - COMADESMA</p>
             </div>
           </div>
         </main>
@@ -152,8 +166,6 @@ const Index = () => {
 
         <CheckoutModal
           product={selectedProduct}
-          sellers={sellers}
-          pixKey={pixKey}
           onClose={() => setSelectedProduct(null)}
           onSuccess={handlePurchaseSuccess}
         />

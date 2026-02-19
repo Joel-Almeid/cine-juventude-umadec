@@ -13,7 +13,7 @@ export function CountdownTimer() {
 
   useEffect(() => {
     // Target date: 14/02/2026 às 19:30 (considering current date context)
-    const targetDate = new Date('2026-02-14T19:30:00-03:00');
+    const targetDate = new Date('2026-02-21T19:30:00-03:00');
 
     const calculateTimeLeft = () => {
       const now = new Date();
@@ -66,7 +66,7 @@ export function CountdownTimer() {
       </div>
 
       <p className="text-sm text-muted-foreground mt-4">
-        📅 14 de Fevereiro às 19:30
+        📅 21 de Fevereiro às 19:30
       </p>
     </div>
   );
