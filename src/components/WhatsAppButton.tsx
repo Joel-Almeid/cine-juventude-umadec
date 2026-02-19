@@ -2,7 +2,7 @@ import { MessageCircle } from 'lucide-react';
 
 export function WhatsAppButton() {
   const handleClick = () => {
-    window.open('https://wa.me/5563992218495', '_blank');
+    window.open('https://wa.me/5563992218495?text=Ol%C3%A1!%20Estou%20com%20uma%20d%C3%BAvida%20sobre%20a%20compra%20do%20ingresso%20para%20o%20Cine%20Jovem.', '_blank');
   };
 
   return (

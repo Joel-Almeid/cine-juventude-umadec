@@ -30,21 +30,19 @@ export function ProductCard({ product, onSelect }: ProductCardProps) {
       
       <ul className="text-sm text-muted-foreground space-y-2 mb-6">
         <li className="flex items-center gap-2">
-          <Check className="w-4 h-4 text-success" />
+          <Check className="w-4 h-4 text-green-400" />
           Entrada garantida
         </li>
         <li className="flex items-center gap-2">
-          <Check className="w-4 h-4 text-success" />
-          Ingresso digital
+          <Check className="w-4 h-4 text-green-400" />
+          Ingresso + Pipoca + Refri
         </li>
-        {product.id !== 'single' && (
-          <li className="flex items-center gap-2">
-            <Check className="w-4 h-4 text-success" />
-            Pipoca + Refri incluso
-          </li>
-        )}
         <li className="flex items-center gap-2">
-          <Ticket className="w-4 h-4 text-success" />
+          <Check className="w-4 h-4 text-green-400" />
+          Ingresso digital personalizado
+        </li>
+        <li className="flex items-center gap-2">
+          <Ticket className="w-4 h-4 text-green-400" />
           Retirada do Ingresso Físico inclusa
         </li>
       </ul>

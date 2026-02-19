@@ -41,25 +41,11 @@ export interface Settings {
 
 export const PRODUCTS: Product[] = [
   {
-    id: 'single',
-    name: 'Ingresso Avulso',
-    description: '1 Ingresso para o evento',
-    price: 5.00,
-    icon: '🎟️',
-  },
-  {
     id: 'combo_individual',
     name: 'Combo Individual',
-    description: 'Ingresso + Pipoca + Refrigerante',
+    description: 'Ingresso + Pipoca + Refri',
     price: 10.00,
     icon: '🍿',
     popular: true,
-  },
-  {
-    id: 'combo_couple',
-    name: 'Combo Duplo',
-    description: '2 Ingressos + Pipoca + Refrigerante',
-    price: 18.00,
-    icon: '👥',
   },
 ];
